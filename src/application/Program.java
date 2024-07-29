@@ -12,16 +12,16 @@ public class Program {
     public static void main(String[] args) {
 
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+        List<Department> departmentList = departmentDao.findAll();
 
-        Department dep = departmentDao.findById(5);
+        SellerDao sellerDao = DaoFactory.createSellerDao();
+        List<Seller> sellerList = sellerDao.findAll();
 
-        dep.setName("Gaming");
+        for (Department obj : departmentList) {
+            System.out.println(obj);
+        }
 
-        departmentDao.update(dep);
-
-        List<Department> list = departmentDao.findAll();
-
-        for (Department obj : list) {
+        for (Seller obj : sellerList) {
             System.out.println(obj);
         }
     }
