@@ -13,10 +13,14 @@ public class Program {
 
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 
-        List<Department> list = departmentDao.findAll();
+        Department dep = departmentDao.findById(3);
 
-        for (Department obj : list) {
-            System.out.println(obj);
-        }
+        System.out.println(dep);
+
+//        List<Department> list = departmentDao.findAll();
+//
+//        for (Department obj : list) {
+//            System.out.println(obj);
+//        }
     }
 }
