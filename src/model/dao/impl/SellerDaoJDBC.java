@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class SellerDaoJDBC implements SellerDao {
 
-    private Connection connection;
+    private final Connection connection;
 
     public SellerDaoJDBC(Connection connection) {
         this.connection = connection;
@@ -104,7 +104,40 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        return List.of();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<Seller> list = new ArrayList<>();
+        Map<Integer, Department> map = new HashMap<>();
+
+        try {
+            statement = connection.prepareStatement(
+                    "SELECT seller.*, department.Name as DepName " +
+                            "FROM seller INNER JOIN department " +
+                            "ON seller.DepartmentId = department.Id " +
+                            "ORDER BY Name");
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Department department = map.get(resultSet.getInt("DepartmentId"));
+                
+                if (department == null) {
+                    department = instantiateDepartment(resultSet);
+                    map.put(resultSet.getInt("DepartmentId"), department);
+                }
+
+                Seller seller = instantiateSeller(resultSet, department);
+                list.add(seller);
+            }
+
+            return list;
+
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(statement);
+            DB.closeResultSet(resultSet);
+        }
     }
 
     private Seller instantiateSeller(ResultSet resultSet, Department dep) throws SQLException {
