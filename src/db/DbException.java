@@ -2,7 +2,7 @@ package db;
 
 import java.io.Serial;
 
-class DbException extends RuntimeException {
+public class DbException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
